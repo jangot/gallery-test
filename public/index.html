@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <title>Галерея</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
     <script src="/bower_components/requirejs/require.js"></script>
+    <script src="/js/require.js"></script>
+    <script>
+        require(['app', 'bootstrap', 'lodash'], function(app) {
+            app.start();
+        });
+    </script>
 </head>
 <body>
-<script src="/js/require.js"></script>
-<script>
-    require(['app', 'bootstrap'], function(app) {
-        var images = [];
 
 
-        app.start();
-    });
-</script>
+<div class="gallery"></div>
+<div class="navigation">
+    <button class="btn">prev</button>
+    <button class="btn" class="next">next</button>
+</div>
 </body>
 </html>

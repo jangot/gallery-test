@@ -1,0 +1,24 @@
+.gallery {
+    width: 400px;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    margin: 50px auto;
+}
+
+.gallery-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.gallery-img.animation {
+    -webkit-transition: left 1s ease-out;
+    -moz-transition: left 1s ease-out;
+    -o-transition: left 1s ease-out;
+    transition: left 1s ease-out;
+}
+
+
+.navigation {
+    text-align: center;
+}
