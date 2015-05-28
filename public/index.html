@@ -3,10 +3,17 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Галерея</title>
+    <script src="/bower_components/requirejs/require.js"></script>
 </head>
 <body>
+<script src="/js/require.js"></script>
+<script>
+    require(['app'], function(app) {
+        var images = [];
 
-<script></script>
-Hello
+
+        app.start();
+    });
+</script>
 </body>
 </html>
