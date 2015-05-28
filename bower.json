@@ -1,0 +1,22 @@
+{
+  "name": "gallery-test",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jangot/gallery-test",
+  "authors": [
+    "jangot <pulin.pavel@gmail.com>"
+  ],
+  "description": "Тестовое задание для компании Эмбрия",
+  "main": "index.html",
+  "keywords": [
+    "photo",
+    "gallery"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
