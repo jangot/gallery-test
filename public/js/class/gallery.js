@@ -4,7 +4,7 @@ define([
 
 ], function($) {
 
-    var imgTemplate = _.template('<img src="<%= src %>" class="gallery-img"/>');
+    var imgTemplate = _.template('<div title="<%= title %>" style="background:url(<%= src %>);" class="gallery-img"></div>');
 
     function Gallery(element) {
         this.element = $(element);
@@ -13,8 +13,11 @@ define([
     }
 
     Gallery.prototype = {
-        add: function(pathToImg) {
-            var img = $(imgTemplate({src: pathToImg}));
+        add: function(pathToImg, title) {
+            var img = $(imgTemplate({
+                src: pathToImg,
+                title: title || ''
+            }));
             img.on('transitionend webkitTransitionEnd oTransitionEnd', function(e) {
                 $(e.target)
                     .removeClass('right')
@@ -77,7 +80,7 @@ define([
                     .addClass('animation')
                     .addClass('active');
                 this.activeImg = newActiveElement;
-            }.bind(this), 10);
+            }.bind(this), 20);
         },
         _canMove: function() {
             return this.activeImg &&

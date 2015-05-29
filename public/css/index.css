@@ -3,13 +3,15 @@
     height: 250px;
     position: relative;
     overflow: hidden;
-    margin: 50px auto;
+    margin: 0 auto;
 }
 
 .gallery-img {
     position: absolute;
     top: -100%;
     left: 0;
+    width: 400px;
+    height: 250px;
 }
 .gallery-img.animation {
     -webkit-transition: left 0.3s ease-out;

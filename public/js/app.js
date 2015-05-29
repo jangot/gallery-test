@@ -1,9 +1,15 @@
 define([
     'jquery',
     'images',
-    'class/gallery'
+    'class/gallery',
+
+    'jqueryMobile'
 
 ], function($, images, Gallery) {
+    var DURATION_MIN = 150;
+
+    $.mobile.autoInitializePage = false;
+
     return {
         start: function() {
             $(function() {
@@ -18,6 +24,14 @@ define([
                 $('.prev').click(function() {
                     gallery.prev();
                 });
+
+                $('.gallery')
+                    .swipeleft(function() {
+                        gallery.next();
+                    })
+                    .swiperight(function() {
+                        gallery.prev();
+                    });
             });
         }
     }
