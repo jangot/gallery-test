@@ -12,10 +12,11 @@ define([
                     gallery.add(img);
                 });
 
-                console.log($('.next'));
-                $('button').click(function() {
-                    console.log('click');
+                $('.next').click(function() {
                     gallery.next();
+                });
+                $('.prev').click(function() {
+                    gallery.prev();
                 });
             });
         }

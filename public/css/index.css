@@ -8,14 +8,27 @@
 
 .gallery-img {
     position: absolute;
-    top: 0;
+    top: -100%;
     left: 0;
 }
 .gallery-img.animation {
-    -webkit-transition: left 1s ease-out;
-    -moz-transition: left 1s ease-out;
-    -o-transition: left 1s ease-out;
-    transition: left 1s ease-out;
+    -webkit-transition: left 0.3s ease-out;
+    -moz-transition: left 0.3s ease-out;
+    -o-transition: left 0.3s ease-out;
+    transition: left 0.3s ease-out;
+}
+
+.left {
+    top: 0 !important;
+    left: -100%;
+}
+.active {
+    top: 0;
+    left: 0 !important;
+}
+.right {
+    top: 0 !important;
+    left: 100%;
 }
 
 

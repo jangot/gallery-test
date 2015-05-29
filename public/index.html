@@ -8,7 +8,7 @@
     <script src="/bower_components/requirejs/require.js"></script>
     <script src="/js/require.js"></script>
     <script>
-        require(['app', 'bootstrap', 'lodash'], function(app) {
+        require(['app'], function(app) {
             app.start();
         });
     </script>
@@ -18,8 +18,8 @@
 
 <div class="gallery"></div>
 <div class="navigation">
-    <button class="btn">prev</button>
-    <button class="btn" class="next">next</button>
+    <button class="btn prev">prev</button>
+    <button class="btn next" class="next">next</button>
 </div>
 </body>
 </html>
