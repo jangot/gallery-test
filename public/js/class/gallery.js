@@ -14,16 +14,15 @@ define([
 
     Gallery.prototype = {
         add: function(pathToImg) {
-            var self = this;
             var img = $(imgTemplate({src: pathToImg}));
-            img
-                .on('transitionend webkitTransitionEnd oTransitionEnd', function() {
-                    $(this)
-                        .removeClass('right')
-                        .removeClass('left')
-                        .removeClass('animation');
-                    self.inAnimation = false;
-                });
+            img.on('transitionend webkitTransitionEnd oTransitionEnd', function(e) {
+                $(e.target)
+                    .removeClass('right')
+                    .removeClass('left')
+                    .removeClass('animation');
+                this.inAnimation = false;
+            }.bind(this));
+
             this.element.append(img);
 
             if (!this.activeImg) {
@@ -36,45 +35,48 @@ define([
                 return;
             }
             this.inAnimation = true;
-
-            var nextImg = this.activeImg.next();
-            if (!nextImg.length) {
-                nextImg = this.element.children().first();
-            }
-            nextImg.addClass('right');
             this.activeImg.addClass('left');
+            var nextImg = this._getNext();
 
-            setTimeout(function() {
-                this.activeImg
-                    .addClass('animation')
-                    .removeClass('active');
-                nextImg
-                    .addClass('animation')
-                    .addClass('active');
-                this.activeImg = nextImg;
-            }.bind(this), 10);
+            this._setActive(nextImg);
         },
         prev: function() {
             if (!this._canMove()) {
                 return;
             }
             this.inAnimation = true;
-
-            var prevImg = this.activeImg.next();
-            if (!prevImg.length) {
-                prevImg = this.element.children().first();
-            }
-            prevImg.addClass('left');
             this.activeImg.addClass('right');
 
+            var prevImg = this._getPrev();
+            this._setActive(prevImg);
+        },
+        _getNext: function() {
+            var nextImg = this.activeImg.next();
+            if (!nextImg.length) {
+                nextImg = this.element.children().first();
+            }
+            nextImg.addClass('right');
+
+            return nextImg;
+        },
+        _getPrev: function() {
+            var prevImg = this.activeImg.prev();
+            if (!prevImg.length) {
+                prevImg = this.element.children().last();
+            }
+            prevImg.addClass('left');
+
+            return prevImg;
+        },
+        _setActive: function(newActiveElement) {
             setTimeout(function() {
                 this.activeImg
                     .addClass('animation')
                     .removeClass('active');
-                prevImg
+                newActiveElement
                     .addClass('animation')
                     .addClass('active');
-                this.activeImg = prevImg;
+                this.activeImg = newActiveElement;
             }.bind(this), 10);
         },
         _canMove: function() {
