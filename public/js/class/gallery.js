@@ -18,7 +18,6 @@ define([
             var img = $(imgTemplate({src: pathToImg}));
             img
                 .on('transitionend webkitTransitionEnd oTransitionEnd', function() {
-                    console.log('endAnimation');
                     $(this)
                         .removeClass('right')
                         .removeClass('left')
@@ -30,8 +29,6 @@ define([
             if (!this.activeImg) {
                 this.activeImg = this.element.children().first();
                 this.activeImg.addClass('active')
-            } else {
-                //img.addClass('left');
             }
         },
         next: function() {
