@@ -1,93 +1,157 @@
 define([
 
-    'jquery'
+    'jquery',
 
-], function($) {
+    'Hammer'
+
+], function($, Hammer) {
 
     var imgTemplate = _.template('<div title="<%= title %>" style="background:url(<%= src %>);" class="gallery-img"></div>');
 
     function Gallery(element) {
         this.element = $(element);
-        this.activeImg = null;
-        this.inAnimation = false;
+        this.width = this.element[0].clientWidth;
+        this.current = null;
+
+        var hammertime = new Hammer(this.element[0], {});
+        hammertime.on('panend', function(ev) {
+            var list = this.element.children();
+            this.current = this._getNewCurrent(list);
+            this.draw();
+        }.bind(this));
+        hammertime.on('pan', function(ev) {
+            this.move(ev.deltaX);
+        }.bind(this));
     }
 
     Gallery.prototype = {
         add: function(pathToImg, title) {
             var img = $(imgTemplate({
                 src: pathToImg,
-                title: title || ''
+                title: title || '',
+                index: this.element.children().length
             }));
-            img.on('transitionend webkitTransitionEnd oTransitionEnd', function(e) {
-                $(e.target)
-                    .removeClass('right')
-                    .removeClass('left')
-                    .removeClass('animation');
-                this.inAnimation = false;
-            }.bind(this));
 
             this.element.append(img);
-
-            if (!this.activeImg) {
-                this.activeImg = this.element.children().first();
-                this.activeImg.addClass('active')
+            if (this.current === null) {
+                this.current = 0;
+                img.addClass('current');
             }
         },
         next: function() {
-            if (!this._canMove()) {
-                return;
-            }
-            this.inAnimation = true;
-            this.activeImg.addClass('left');
-            var nextImg = this._getNext();
-
-            this._setActive(nextImg);
+            var list = this.element.children();
+            this.current = this._getNextIndex(this.current, list);
+            var next = this._getNextIndex(this.current, list);
+            list
+                .eq(next)
+                .addClass('current');
+            setTimeout(function() {
+                this.draw();
+            }.bind(this), 15);
         },
         prev: function() {
-            if (!this._canMove()) {
-                return;
-            }
-            this.inAnimation = true;
-            this.activeImg.addClass('right');
-
-            var prevImg = this._getPrev();
-            this._setActive(prevImg);
-        },
-        _getNext: function() {
-            var nextImg = this.activeImg.next();
-            if (!nextImg.length) {
-                nextImg = this.element.children().first();
-            }
-            nextImg.addClass('right');
-
-            return nextImg;
-        },
-        _getPrev: function() {
-            var prevImg = this.activeImg.prev();
-            if (!prevImg.length) {
-                prevImg = this.element.children().last();
-            }
-            prevImg.addClass('left');
-
-            return prevImg;
-        },
-        _setActive: function(newActiveElement) {
+            var list = this.element.children();
+            this.current = this._getPrevIndex(this.current, list);
+            var prev = this._getPrevIndex(this.current, list);
+            list
+                .eq(prev)
+                .addClass('current')
             setTimeout(function() {
-                this.activeImg
-                    .addClass('animation')
-                    .removeClass('active');
-                newActiveElement
-                    .addClass('animation')
-                    .addClass('active');
-                this.activeImg = newActiveElement;
-            }.bind(this), 20);
+                this.draw();
+            }.bind(this), 15);
         },
-        _canMove: function() {
-            return this.activeImg &&
-                this.element.children().length > 1 &&
-                !this.inAnimation;
+        draw: function() {
+            var list = this.element.children();
+
+            var next = this._getNextIndex(this.current, list);
+            var prev = this._getPrevIndex(this.current, list);
+
+            list
+                .eq(this.current)
+                .addClass('animation')
+                .css('left', '0px');
+            list
+                .eq(next)
+                .addClass('animation')
+                .css('left', '100%');
+            list
+                .eq(prev)
+                .addClass('animation')
+                .css('left', '-100%');
+        },
+        move: function(deltaX) {
+            var duration = Math.abs(deltaX);
+            var direction = deltaX < 0 ? 'left' : 'right';
+            var moveElementsCount = Math.floor(duration / this.width);
+            var viewElement = this.current;
+            var list = this.element.children();
+
+            while (moveElementsCount > 0) {
+                if (direction === 'right') {
+                    deltaX = deltaX - this.width;
+                    viewElement = this._getPrevIndex(viewElement, list);
+                } else {
+                    deltaX = deltaX + this.width;
+                    viewElement = this._getNextIndex(viewElement, list);
+                }
+                moveElementsCount--;
+            }
+
+            var secondElement = 0;
+            var secondDelta = 0;
+            if (direction === 'right') {
+                secondElement = this._getPrevIndex(viewElement, list);
+                secondDelta = deltaX - this.width;
+            } else {
+                secondElement = this._getNextIndex(viewElement, list);
+                secondDelta = deltaX + this.width;
+            }
+
+            list
+                .removeClass('animation')
+                .removeClass('current');
+            list
+                .eq(viewElement)
+                .addClass('current')
+                .css('left', deltaX + 'px');
+            list
+                .eq(secondElement)
+                .addClass('current')
+                .css('left', secondDelta + 'px');
+        },
+        _getNewCurrent: function(list) {
+            var width = this.width;
+            var current = null;
+            list.each(function(i){
+                var el = $(this);
+                if (el.filter('.current').length === 0) {
+                    return;
+                }
+                var left = el.position().left;
+                if (Math.abs(left) < width / 2) {
+                    current = i;
+                    return false;
+                }
+            });
+
+            return current;
+        },
+        _getPrevIndex: function(index, list) {
+            if (index === 0) {
+                return list.length - 1;
+            } else {
+                return --index;
+            }
+        },
+        _getNextIndex: function(index, list) {
+            var elementsCount = list.length - 1;
+            if (index === elementsCount) {
+                return 0;
+            } else {
+                return ++index;
+            }
         }
-    }
+    };
 
     return Gallery;
 });

@@ -1,12 +1,10 @@
 define([
     'jquery',
     'images',
-    'class/gallery2',
+    'class/gallery',
     'Hammer'
 
-], function($, images, Gallery, Hammer) {
-    var DURATION_MIN = 150;
-
+], function($, images, Gallery) {
     return {
         start: function() {
             $(function() {
