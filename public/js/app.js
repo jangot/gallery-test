@@ -2,23 +2,22 @@ define([
     'jquery',
     'images',
     'class/gallery',
-    'Hammer'
+    'class/title'
 
-], function($, images, Gallery) {
+], function($, images, Gallery, Title) {
     return {
         start: function() {
             $(function() {
                 var gallery = new Gallery('.gallery');
-                images.forEach(function(img) {
-                    gallery.add(img);
+                var title = new Title('.title');
+
+                gallery.onChange(function(src) {
+                    title.set(images[src]);
                 });
 
-                $('.next').click(function() {
-                    gallery.next();
-                });
-                $('.prev').click(function() {
-                    gallery.prev();
-                });
+                _.forEach(images, function(title, src) {
+                    gallery.add(src, title);
+                })
             });
         }
     }

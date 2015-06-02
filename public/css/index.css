@@ -31,7 +31,7 @@
     top: 0 !important;
     left: -100%;
 }
-.current {
+.active {
     left: 0;
     top: 0;
     z-index: 2;
@@ -41,7 +41,23 @@
     left: 100%;
 }
 
-
-.navigation {
+.title {
+    position: relative;
+}
+.title span {
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     text-align: center;
+}
+.title span.removed {
+    transition: opacity 100ms linear;
+}
+.title span.created {
+    transition: opacity 100ms linear 100ms;
+}
+.title span.hideText {
+    opacity: 0;
 }

@@ -12,19 +12,28 @@ define([
         this.element = $(element);
         this.width = this.element[0].clientWidth;
         this.current = null;
+        this.listeners = [];
 
         var hammertime = new Hammer(this.element[0], {});
-        hammertime.on('panend', function(ev) {
-            var list = this.element.children();
-            this.current = this._getNewCurrent(list);
-            this.draw();
-        }.bind(this));
         hammertime.on('pan', function(ev) {
             this.move(ev.deltaX);
+        }.bind(this));
+        hammertime.on('panend', function(ev) {
+            var oldCurrent = this.current;
+            this.current = this._getNewCurrent();
+            if (oldCurrent !== this.current) {
+                this._notify();
+            }
+            this.draw();
         }.bind(this));
     }
 
     Gallery.prototype = {
+        onChange: function(fn) {
+            if (_.isFunction(fn)) {
+                this.listeners.push(fn);
+            }
+        },
         add: function(pathToImg, title) {
             var img = $(imgTemplate({
                 src: pathToImg,
@@ -32,33 +41,13 @@ define([
                 index: this.element.children().length
             }));
 
+            img.data('src', pathToImg);
             this.element.append(img);
             if (this.current === null) {
                 this.current = 0;
-                img.addClass('current');
+                img.addClass('active');
+                this._notify();
             }
-        },
-        next: function() {
-            var list = this.element.children();
-            this.current = this._getNextIndex(this.current, list);
-            var next = this._getNextIndex(this.current, list);
-            list
-                .eq(next)
-                .addClass('current');
-            setTimeout(function() {
-                this.draw();
-            }.bind(this), 15);
-        },
-        prev: function() {
-            var list = this.element.children();
-            this.current = this._getPrevIndex(this.current, list);
-            var prev = this._getPrevIndex(this.current, list);
-            list
-                .eq(prev)
-                .addClass('current')
-            setTimeout(function() {
-                this.draw();
-            }.bind(this), 15);
         },
         draw: function() {
             var list = this.element.children();
@@ -109,22 +98,30 @@ define([
 
             list
                 .removeClass('animation')
-                .removeClass('current');
+                .removeClass('active');
             list
                 .eq(viewElement)
-                .addClass('current')
+                .addClass('active')
                 .css('left', deltaX + 'px');
             list
                 .eq(secondElement)
-                .addClass('current')
+                .addClass('active')
                 .css('left', secondDelta + 'px');
         },
-        _getNewCurrent: function(list) {
+        _notify: function() {
+            var img = this.element.children().eq(this.current);
+            this.listeners.forEach(function(fn) {
+                fn(img.data('src'));
+            }.bind(this));
+        },
+        _getNewCurrent: function() {
+            var list = this.element.children();
+
             var width = this.width;
             var current = null;
             list.each(function(i){
                 var el = $(this);
-                if (el.filter('.current').length === 0) {
+                if (el.filter('.active').length === 0) {
                     return;
                 }
                 var left = el.position().left;
