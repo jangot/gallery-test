@@ -6,7 +6,6 @@
     margin: 0 auto;
     background: silver;
 }
-
 .gallery-img {
     position: absolute;
     top: -100%;
@@ -14,33 +13,14 @@
     width: 400px;
     height: 250px;
 }
-.gallery-img span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 3px;
-    background: black;
-    border: 1px green solid;
-    color: #00ff00;
-}
 .gallery-img.animation {
     transition: left 200ms linear;
-}
-
-.left {
-    top: 0 !important;
-    left: -100%;
 }
 .active {
     left: 0;
     top: 0;
     z-index: 2;
 }
-.right {
-    top: 0 !important;
-    left: 100%;
-}
-
 .title {
     position: relative;
 }
