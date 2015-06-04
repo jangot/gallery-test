@@ -58,15 +58,15 @@ define([
             list
                 .eq(this.current)
                 .addClass('animation')
-                .css('left', '0px');
+                .css('transform', 'translate(0,0)');
             list
                 .eq(next)
                 .addClass('animation')
-                .css('left', '100%');
+                .css('transform', 'translate('+ this.width +'px,0)');
             list
                 .eq(prev)
                 .addClass('animation')
-                .css('left', '-100%');
+                .css('transform', 'translate(-'+ this.width +'px,0)');
         },
         move: function(deltaX) {
             var duration = Math.abs(deltaX);
@@ -102,11 +102,11 @@ define([
             list
                 .eq(viewElement)
                 .addClass('active')
-                .css('left', deltaX + 'px');
+                .css('transform', 'translate(' + deltaX + 'px,0)');
             list
                 .eq(secondElement)
                 .addClass('active')
-                .css('left', secondDelta + 'px');
+                .css('transform', 'translate(' + secondDelta + 'px,0)');
         },
         _notify: function() {
             var img = this.element.children().eq(this.current);

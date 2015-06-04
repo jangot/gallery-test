@@ -14,7 +14,10 @@
     height: 250px;
 }
 .gallery-img.animation {
-    transition: left 200ms linear;
+    -webkit-transition: all 200ms linear;
+    -moz-transition: all 200ms linear;
+    -o-transition: all 200ms linear;
+    transition: all 200ms linear;
 }
 .active {
     left: 0;
@@ -33,9 +36,15 @@
     text-align: center;
 }
 .title span.removed {
+    -webkit-transition: opacity 100ms linear;
+    -moz-transition: opacity 100ms linear;
+    -o-transition: opacity 100ms linear;
     transition: opacity 100ms linear;
 }
 .title span.created {
+    -webkit-transition: opacity 100ms linear 100ms;
+    -moz-transition: opacity 100ms linear 100ms;
+    -o-transition: opacity 100ms linear 100ms;
     transition: opacity 100ms linear 100ms;
 }
 .title span.hideText {
